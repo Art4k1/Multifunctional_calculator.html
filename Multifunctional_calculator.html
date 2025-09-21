@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Набір корисних інструментів</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .description {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-btn {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .menu-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .tool-container {
+            display: none;
+        }
+        
+        .active-tool {
+            display: block;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #27ae60;
+        }
+        
+        .results {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .profit {
+            color: #27ae60;
+        }
+        
+        .expense {
+            color: #e74c3c;
+        }
+        
+        .highlight {
+            font-size: 1.2em;
+            font-weight: 800;
+        }
+        
+        .task-list {
+            list-style-type: none;
+            margin-top: 20px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .task-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+        }
+        
+        .task-text {
+            flex: 1;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .menu {
+                flex-direction: column;
+            }
+            
+            .menu-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Набір корисних інструментів</h1>
+        <p class="description">Оберіть потрібний інструмент з меню нижче</p>
+        
+        <div class="menu">
+    <button class="menu-btn" data-tool="cost">Калькулятор собівартості</button>
+    <button class="menu-btn" data-tool="converter">Конвертер величин</button>
+    <button class="menu-btn" data-tool="budget">Планувальник бюджету</button>
+    <button class="menu-btn" data-tool="checklist">Чек-листи</button>
+    <button class="menu-btn" data-tool="time">Калькулятор часу</button>
+    <div class="update-date">Оновлено 21.09.2025</div>
+</div>
+        
+        <!-- Інструмент 1: Калькулятор собівартості -->
+        <div id="cost-tool" class="tool-container active-tool">
+            <h2>Калькулятор собівартості та ціноутворення</h2>
+            
+            <div class="input-group">
+                <label for="materialCost">Вартість матеріалів (₴)</label>
+                <input type="number" id="materialCost" min="0" value="1000">
+            </div>
+            
+            <div class="input-group">
+                <label for="hours">Витрачений час (годин)</label>
+                <input type="number" id="hours" min="0" value="10">
+            </div>
+            
+            <div class="input-group">
+                <label for="hourlyRate">Вартість години роботи (₴)</label>
+                <input type="number" id="hourlyRate" min="0" value="500">
+            </div>
+            
+            <div class="input-group">
+                <label for="otherCosts">Додаткові витрати (₴)</label>
+                <input type="number" id="otherCosts" min="0" value="200">
+            </div>
+            
+            <div class="input-group">
+                <label for="markup">Націнка (%)</label>
+                <div class="range-container">
+                    <input type="range" id="markup" min="0" max="100" value="30">
+                    <span id="markupValue">30%</span>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="taxRate">Податкова ставка (%)</label>
+                <select id="taxRate">
+                    <option value="0">0% (без податку)</option>
+                    <option value="5" selected>5% (єдиний податок)</option>
+                    <option value="7">7% (єдиний податок)</option>
+                    <option value="14">14% (єдиний податок)</option>
+                    <option value="20">20% (ПДВ)</option>
+                </select>
+            </div>
+            
+            <button onclick="calculateCost()">Розрахувати</button>
+            
+            <div class="results">
+                <h2>Результати розрахунку</h2>
+                <div class="result-item">
+                    <span>Собівартість:</span>
+                    <span id="totalCost" class="result-value expense">1750 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Націнка:</span>
+                    <span id="markupAmount" class="result-value">525 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Ціна до податку:</span>
+                    <span id="priceBeforeTax" class="result-value">2275 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Сума податку:</span>
+                    <span id="taxAmount" class="result-value expense">113.75 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Підсумкова ціна:</span>
+                    <span id="finalPrice" class="result-value highlight">2388.75 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Прибуток:</span>
+                    <span id="profit" class="result-value profit">638.75 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Рентабельність:</span>
+                    <span id="profitability" class="result-value profit">36.5%</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Інструмент 2: Конвертер величин -->
+        <div id="converter-tool" class="tool-container">
+            <h2>Конвертер величин</h2>
+            
+            <div class="input-group">
+                <label for="converterValue">Значення для конвертації</label>
+                <input type="number" id="converterValue" value="1" step="any">
+            </div>
+            
+            <div class="input-group">
+                <label for="converterFrom">Конвертувати з</label>
+                <select id="converterFrom">
+                    <option value="meter">Метри</option>
+                    <option value="kilometer">Кілометри</option>
+                    <option value="centimeter">Сантиметри</option>
+                    <option value="millimeter">Міліметри</option>
+                    <option value="mile">Милі</option>
+                    <option value="inch">Дюйми</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="converterTo">Конвертувати в</label>
+                <select id="converterTo">
+                    <option value="meter">Метри</option>
+                    <option value="kilometer">Кілометри</option>
+                    <option value="centimeter">Сантиметри</option>
+                    <option value="millimeter">Міліметри</option>
+                    <option value="mile">Милі</option>
+                    <option value="inch" selected>Дюйми</option>
+                </select>
+            </div>
+            
+            <button onclick="convertUnits()">Конвертувати</button>
+            
+            <div class="results">
+                <h2>Результат конвертації</h2>
+                <div class="result-item">
+                    <span>Результат:</span>
+                    <span id="conversionResult" class="result-value highlight">39.37</span>
+                </div>
+                <div class="result-item">
+                    <span>Формула:</span>
+                    <span id="conversionFormula" class="result-value">1 м = 39.37 дюйма</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Інструмент 3: Планувальник бюджету -->
+        <div id="budget-tool" class="tool-container">
+            <h2>Планувальник бюджету</h2>
+            
+            <div class="input-group">
+                <label for="income">Дохід (₴)</label>
+                <input type="number" id="income" min="0" value="5000">
+            </div>
+            
+            <h3>Витрати</h3>
+            <div id="expenses-container">
+                <div class="input-group expense-item">
+                    <label>Категорія витрат</label>
+                    <input type="text" class="expense-category" placeholder="Наприклад: Їжа" value="Їжа">
+                    <label>Сума (₴)</label>
+                    <input type="number" class="expense-amount" min="0" value="1500">
+                </div>
+                <div class="input-group expense-item">
+                    <label>Категорія витрат</label>
+                    <input type="text" class="expense-category" placeholder="Наприклад: Комунальні послуги" value="Комунальні послуги">
+                    <label>Сума (₴)</label>
+                    <input type="number" class="expense-amount" min="0" value="1200">
+                </div>
+            </div>
+            
+            <button onclick="addExpense()">Додати витрату</button>
+            <button onclick="calculateBudget()">Розрахувати бюджет</button>
+            
+            <div class="results">
+                <h2>Результати бюджету</h2>
+                <div class="result-item">
+                    <span>Загальний дохід:</span>
+                    <span id="totalIncome" class="result-value profit">5000 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Загальні витрати:</span>
+                    <span id="totalExpenses" class="result-value expense">2700 ₴</span>
+                </div>
+                <div class="result-item">
+                    <span>Залишок:</span>
+                    <span id="balance" class="result-value highlight">2300 ₴</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Інструмент 4: Чек-листи -->
+        <div id="checklist-tool" class="tool-container">
+            <h2>Менеджер чек-листів</h2>
+            
+            <div class="input-group">
+                <label for="newTask">Нове завдання</label>
+                <input type="text" id="newTask" placeholder="Введіть нове завдання">
+            </div>
+            
+            <button onclick="addTask()">Додати завдання</button>
+            
+            <div class="results">
+                <h2>Список завдань</h2>
+                <ul id="taskList" class="task-list">
+                    <li class="task-item">
+                        <input type="checkbox" onchange="toggleTask(this)">
+                        <span class="task-text">Приклад завдання</span>
+                        <button class="delete-btn" onclick="deleteTask(this)">Видалити</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Інструмент 5: Калькулятор часу -->
+        <div id="time-tool" class="tool-container">
+            <h2>Калькулятор часу та дедлайнів</h2>
+            
+            <div class="input-group">
+                <label for="deadline">Кінцевий термін</label>
+                <input type="date" id="deadline">
+            </div>
+            
+            <div class="input-group">
+                <label for="hoursPerDay">Годин на день</label>
+                <input type="number" id="hoursPerDay" min="0" max="24" value="2">
+            </div>
+            
+            <div class="input-group">
+                <label for="totalTaskHours">Загальна кількість годин для виконання</label>
+                <input type="number" id="totalTaskHours" min="0" value="20">
+            </div>
+            
+            <button onclick="calculateTime()">Розрахувати</button>
+            
+            <div class="results">
+                <h2>Результати розрахунку</h2>
+                <div class="result-item">
+                    <span>Днів залишилось:</span>
+                    <span id="daysLeft" class="result-value">10</span>
+                </div>
+                <div class="result-item">
+                    <span>Годин на день:</span>
+                    <span id="dailyGoal" class="result-value">2</span>
+                </div>
+                <div class="result-item">
+                    <span>Статус:</span>
+                    <span id="timeStatus" class="result-value highlight">Ви в графіку!</span>
+                </div>
+            </div>
+        </div>
+        
+        <button id="backButton" class="back-btn" style="display: none;">Назад до меню</button>
+    </div>
+
+    <script>
+        // Глобальні змінні
+        let currentTool = 'cost-tool';
+        
+        // Ініціалізація
+        document.addEventListener('DOMContentLoaded', function() {
+            // Встановлюємо дату дедлайну (за замовчуванням +10 днів)
+            const deadline = new Date();
+            deadline.setDate(deadline.getDate() + 10);
+            document.getElementById('deadline').value = deadline.toISOString().split('T')[0];
+            
+            // Додаємо обробники подій для кнопок меню
+            document.querySelectorAll('.menu-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    selectTool(this.getAttribute('data-tool'));
+                });
+            });
+            
+            // Додаємо обробник для кнопки "Назад"
+            document.getElementById('backButton').addEventListener('click', function() {
+                selectTool('menu');
+            });
+            
+            // Ініціалізуємо калькулятор собівартості
+            calculateCost();
+        });
+        
+        // Функція вибору інструменту
+        function selectTool(tool) {
+            if (tool === 'menu') {
+                // Показуємо меню
+                document.querySelector('.menu').style.display = 'flex';
+                document.getElementById('backButton').style.display = 'none';
+                
+                // Ховаємо всі інструменти
+                document.querySelectorAll('.tool-container').forEach(container => {
+                    container.classList.remove('active-tool');
+                });
+                
+                currentTool = null;
+            } else {
+                // Ховаємо меню
+                document.querySelector('.menu').style.display = 'none';
+                document.getElementById('backButton').style.display = 'block';
+                
+                // Ховаємо всі інструменти
+                document.querySelectorAll('.tool-container').forEach(container => {
+                    container.classList.remove('active-tool');
+                });
+                
+                // Показуємо вибраний інструмент
+                document.getElementById(tool + '-tool').classList.add('active-tool');
+                currentTool = tool + '-tool';
+            }
+        }
+        
+        // Інструмент 1: Калькулятор собівартості
+        function calculateCost() {
+            const materialCost = parseFloat(document.getElementById('materialCost').value) || 0;
+            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+            const otherCosts = parseFloat(document.getElementById('otherCosts').value) || 0;
+            const markup = parseFloat(document.getElementById('markup').value) || 0;
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            
+            document.getElementById('markupValue').textContent = markup + '%';
+            
+            const laborCost = hours * hourlyRate;
+            const totalCost = materialCost + laborCost + otherCosts;
+            const markupAmount = totalCost * (markup / 100);
+            const priceBeforeTax = totalCost + markupAmount;
+            const taxAmount = priceBeforeTax * (taxRate / 100);
+            const finalPrice = priceBeforeTax + taxAmount;
+            const profit = finalPrice - totalCost - taxAmount;
+            const profitability = totalCost > 0 ? (profit / totalCost) * 100 : 0;
+            
+            document.getElementById('totalCost').textContent = totalCost.toFixed(2) + ' ₴';
+            document.getElementById('markupAmount').textContent = markupAmount.toFixed(2) + ' ₴';
+            document.getElementById('priceBeforeTax').textContent = priceBeforeTax.toFixed(2) + ' ₴';
+            document.getElementById('taxAmount').textContent = taxAmount.toFixed(2) + ' ₴';
+            document.getElementById('finalPrice').textContent = finalPrice.toFixed(2) + ' ₴';
+            document.getElementById('profit').textContent = profit.toFixed(2) + ' ₴';
+            document.getElementById('profitability').textContent = profitability.toFixed(1) + '%';
+        }
+        
+        // Інструмент 2: Конвертер величин
+        function convertUnits() {
+            const value = parseFloat(document.getElementById('converterValue').value) || 0;
+            const fromUnit = document.getElementById('converterFrom').value;
+            const toUnit = document.getElementById('converterTo').value;
+            
+            // Конвертуємо в метри (базова одиниця)
+            let valueInMeters;
+            switch(fromUnit) {
+                case 'meter': valueInMeters = value; break;
+                case 'kilometer': valueInMeters = value * 1000; break;
+                case 'centimeter': valueInMeters = value / 100; break;
+                case 'millimeter': valueInMeters = value / 1000; break;
+                case 'mile': valueInMeters = value * 1609.34; break;
+                case 'inch': valueInMeters = value * 0.0254; break;
+            }
+            
+            // Конвертуємо з метрів в цільову одиницю
+            let result;
+            switch(toUnit) {
+                case 'meter': result = valueInMeters; break;
+                case 'kilometer': result = valueInMeters / 1000; break;
+                case 'centimeter': result = valueInMeters * 100; break;
+                case 'millimeter': result = valueInMeters * 1000; break;
+                case 'mile': result = valueInMeters / 1609.34; break;
+                case 'inch': result = valueInMeters / 0.0254; break;
+            }
+            
+            document.getElementById('conversionResult').textContent = result.toFixed(2);
+            
+            // Формула для відображення
+            const unitNames = {
+                'meter': 'метр',
+                'kilometer': 'кілометр',
+                'centimeter': 'сантиметр',
+                'millimeter': 'міліметр',
+                'mile': 'миля',
+                'inch': 'дюйм'
+            };
+            
+            document.getElementById('conversionFormula').textContent = 
+                `1 ${unitNames[fromUnit]} = ${(1/value * result).toFixed(2)} ${unitNames[toUnit]}а`;
+        }
+        
+        // Інструмент 3: Планувальник бюджету
+        function addExpense() {
+            const container = document.getElementById('expenses-container');
+            const newExpense = document.createElement('div');
+            newExpense.className = 'input-group expense-item';
+            newExpense.innerHTML = `
+                <label>Категорія витрат</label>
+                <input type="text" class="expense-category" placeholder="Наприклад: Транспорт">
+                <label>Сума (₴)</label>
+                <input type="number" class="expense-amount" min="0" value="0">
+            `;
+            container.appendChild(newExpense);
+        }
+        
+        function calculateBudget() {
+            const income = parseFloat(document.getElementById('income').value) || 0;
+            
+            let totalExpenses = 0;
+            document.querySelectorAll('.expense-item').forEach(item => {
+                const amount = parseFloat(item.querySelector('.expense-amount').value) || 0;
+                totalExpenses += amount;
+            });
+            
+            const balance = income - totalExpenses;
+            
+            document.getElementById('totalIncome').textContent = income.toFixed(2) + ' ₴';
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2) + ' ₴';
+            document.getElementById('balance').textContent = balance.toFixed(2) + ' ₴';
+        }
+        
+        // Інструмент 4: Чек-листи
+        function addTask() {
+            const taskText = document.getElementById('newTask').value.trim();
+            if (taskText === '') return;
+            
+            const taskList = document.getElementById('taskList');
+            const newTask = document.createElement('li');
+            newTask.className = 'task-item';
+            newTask.innerHTML = `
+                <input type="checkbox" onchange="toggleTask(this)">
+                <span class="task-text">${taskText}</span>
+                <button class="delete-btn" onclick="deleteTask(this)">Видалити</button>
+            `;
+            taskList.appendChild(newTask);
+            
+            document.getElementById('newTask').value = '';
+        }
+        
+        function toggleTask(checkbox) {
+            const taskText = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                taskText.classList.add('completed');
+            } else {
+                taskText.classList.remove('completed');
+            }
+        }
+        
+        function deleteTask(button) {
+            const taskItem = button.parentElement;
+            taskItem.remove();
+        }
+        
+        // Інструмент 5: Калькулятор часу
+        function calculateTime() {
+            const deadline = new Date(document.getElementById('deadline').value);
+            const hoursPerDay = parseFloat(document.getElementById('hoursPerDay').value) || 0;
+            const totalTaskHours = parseFloat(document.getElementById('totalTaskHours').value) || 0;
+            
+            const today = new Date();
+            const timeDiff = deadline.getTime() - today.getTime();
+            const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            const dailyHoursNeeded = totalTaskHours / daysLeft;
+            
+            document.getElementById('daysLeft').textContent = daysLeft;
+            document.getElementById('dailyGoal').textContent = dailyHoursNeeded.toFixed(1);
+            
+            if (dailyHoursNeeded <= hoursPerDay) {
+                document.getElementById('timeStatus').textContent = 'Ви в графіку!';
+                document.getElementById('timeStatus').style.color = '#27ae60';
+            } else {
+                document.getElementById('timeStatus').textContent = 'Ви відстаєте!';
+                document.getElementById('timeStatus').style.color = '#e74c3c';
+            }
+        }
+    </script>
+</body>
+</html>
